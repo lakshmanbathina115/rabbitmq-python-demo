@@ -19,12 +19,14 @@ channel.queue_declare(queue='hello')
 # Define the callback to run when a message is received
 def callback(ch, method, properties, body):
     print(f" [x] Received {body}")
+    # Send ACK back to RabbitMQ
+    ch.basic_ack(delivery_tag=method.delivery_tag)
 
 # Subscribe to the queue
 channel.basic_consume(
     queue='hello',
     on_message_callback=callback,
-    auto_ack=True
+    auto_ack=False
 )
 
 print(' [*] Waiting for messages. To exit press CTRL+C')
